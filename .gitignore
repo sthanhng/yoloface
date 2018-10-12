@@ -40,4 +40,8 @@ samples/*.mp4
 # The weights of the trained models
 model-weights/*.weights
 
+# Output files
+outputs/*.mp4
+outputs/*.avi
+
 
