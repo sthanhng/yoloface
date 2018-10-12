@@ -28,12 +28,16 @@ Temporary Items
 
 ### Project ###
 .idea/
+__pycache__/
 
-# virtualenv
+# Virtualenv
 venv/
 
-# temp files
+# Temp files
 temp/
 samples/*.mp4
+
+# The weights of the trained models
+model-weights/*.weights
 
 
