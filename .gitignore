@@ -25,3 +25,15 @@ Icon
 Network Trash Folder
 Temporary Items
 .apdisk
+
+### Project ###
+.idea/
+
+# virtualenv
+venv/
+
+# temp files
+temp/
+samples/*.mp4
+
+
