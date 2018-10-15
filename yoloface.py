@@ -106,8 +106,6 @@ def _main():
             cv2.waitKey(1000)
             break
 
-        fps = FPS().start()
-
         # Create a 4D blob from a frame.
         blob = cv2.dnn.blobFromImage(frame, 1 / 255, (IMG_WIDTH, IMG_HEIGHT),
                                      [0, 0, 0], 1, crop=False)
@@ -123,13 +121,9 @@ def _main():
         print('[i] ==> # detected faces: {}'.format(len(faces)))
         print('#' * 60)
 
-        # update fps counter
-        fps.update()
-        fps.stop()
-
         # initialize the set of information we'll displaying on the frame
         info = [
-            ('number of faces detected', '{}(s)'.format(len(faces)))
+            ('number of faces detected', '{}'.format(len(faces)))
         ]
 
         for (i, (txt, val)) in enumerate(info):
