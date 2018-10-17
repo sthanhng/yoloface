@@ -2,3 +2,6 @@ numpy
 tensorflow==1.8.0
 opencv-python
 opencv-contrib-python
+keras
+matplotlib
+pillow
