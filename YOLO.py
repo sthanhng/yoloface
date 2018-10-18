@@ -14,6 +14,7 @@
 import os
 import colorsys
 import numpy as np
+import cv2
 
 from yolo.model import eval
 from yolo.utils import letterbox_image
@@ -21,7 +22,7 @@ from yolo.utils import letterbox_image
 from keras import backend as K
 from keras.models import load_model
 from timeit import default_timer as timer
-from PIL import ImageDraw
+from PIL import ImageDraw, Image
 
 
 class YOLO(object):
@@ -156,3 +157,59 @@ class YOLO(object):
 
     def close_session(self):
         self.sess.close()
+
+
+def detect_video(model, video_path=None, output=None):
+    vid = cv2.VideoCapture(video_path)
+    if not vid.isOpened():
+        raise IOError("Couldn't open webcam or video")
+
+    # The video format and fps
+    video_fourcc = int(vid.get(cv2.CAP_PROP_FOURCC))
+    video_fps = vid.get(cv2.CAP_PROP_FPS)
+
+    # The size of the frames to write
+    video_size = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
+                  int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
+    isOutput = True if output != "" else False
+    if isOutput:
+        out = cv2.VideoWriter(output, video_fourcc, video_fps, video_size)
+
+    accum_time = 0
+    curr_fps = 0
+    fps = "FPS: ??"
+    prev_time = timer()
+    ###################################
+    while True:
+        ret, frame = vid.read()
+        if ret:
+            image = Image.fromarray(frame)
+            image = model.detect_image(image)
+            result = np.asarray(image)
+
+            curr_time = timer()
+            exec_time = curr_time - prev_time
+            prev_time = curr_time
+            accum_time = accum_time + exec_time
+            curr_fps = curr_fps + 1
+            if accum_time > 1:
+                accum_time = accum_time - 1
+                fps = 'FPS: {}'.format(curr_fps)
+                curr_fps = 0
+            cv2.putText(result, fps, (20, 30), cv2.FONT_HERSHEY_SIMPLEX,
+                        0.6, (0, 255, 0), 2)
+            cv2.namedWindow("face", cv2.WINDOW_NORMAL)
+            cv2.imshow("face", result)
+            if isOutput:
+                out.write(result)
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+        else:
+            break
+
+    vid.release()
+    out.release()
+    cv2.destroyAllWindows()
+
+    # Close the session
+    model.close_session()
