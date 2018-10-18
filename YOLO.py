@@ -160,12 +160,17 @@ class YOLO(object):
 
 
 def detect_video(model, video_path=None, output=None):
-    vid = cv2.VideoCapture(video_path)
+    if video_path == 'stream':
+        vid = cv2.VideoCapture(0)
+    else:
+        vid = cv2.VideoCapture(video_path)
+
     if not vid.isOpened():
         raise IOError("Couldn't open webcam or video")
 
     # The video format and fps
-    video_fourcc = int(vid.get(cv2.CAP_PROP_FOURCC))
+    # video_fourcc = int(vid.get(cv2.CAP_PROP_FOURCC))
+    video_fourcc = cv2.VideoWriter_fourcc('M', 'G', 'P', 'G')
     video_fps = vid.get(cv2.CAP_PROP_FPS)
 
     # The size of the frames to write
@@ -173,7 +178,8 @@ def detect_video(model, video_path=None, output=None):
                   int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
     isOutput = True if output != "" else False
     if isOutput:
-        out = cv2.VideoWriter(output, video_fourcc, video_fps, video_size)
+        output_fn = 'output_video.avi'
+        out = cv2.VideoWriter(os.path.join(output, output_fn), video_fourcc, video_fps, video_size)
 
     accum_time = 0
     curr_fps = 0

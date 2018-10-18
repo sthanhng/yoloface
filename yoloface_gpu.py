@@ -23,8 +23,8 @@ def get_args():
                         help='image detection mode')
     parser.add_argument('--video', type=str, default='samples/subway.mp4',
                         help='path to the video')
-    parser.add_argument('--output', type=str,
-                        default='', help='image/video output path')
+    parser.add_argument('--output', type=str, default='outputs/',
+                        help='image/video output path')
     args = parser.parse_args()
     return args
 
@@ -55,7 +55,7 @@ def _main():
     else:
         print('[i] ==> Video detection mode\n')
         # Call the detect_video method here
-        detect_video(YOLO(args), args.video)
+        detect_video(YOLO(args), args.video, args.output)
 
     print('Well done!!!')
 
