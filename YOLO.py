@@ -147,16 +147,31 @@ class YOLO(object):
             for thk in range(thickness):
                 draw.rectangle(
                     [left + thk, top + thk, right - thk, bottom - thk],
-                    outline=self.colors[c])
+                    outline=(51, 178, 255))
             del draw
 
         end_time = timer()
         print('[i] ==> Processing time: {:.2f}ms'.format((end_time -
                                                           start_time) * 1000))
-        return image
+        return image, out_boxes
 
     def close_session(self):
         self.sess.close()
+
+
+def detect_img(yolo):
+    while True:
+        img = input('[i] ==> Input image filename: ')
+        try:
+            image = Image.open(img)
+        except:
+            print('[!] ==> Open Error! Try again!')
+            continue
+        else:
+            res_image, _ = yolo.detect_image(image)
+            res_image.show()
+
+    yolo.close_session()
 
 
 def detect_video(model, video_path=None, output=None):
@@ -190,7 +205,7 @@ def detect_video(model, video_path=None, output=None):
         ret, frame = vid.read()
         if ret:
             image = Image.fromarray(frame)
-            image = model.detect_image(image)
+            image, faces = model.detect_image(image)
             result = np.asarray(image)
 
             curr_time = timer()
@@ -200,10 +215,22 @@ def detect_video(model, video_path=None, output=None):
             curr_fps = curr_fps + 1
             if accum_time > 1:
                 accum_time = accum_time - 1
-                fps = 'FPS: {}'.format(curr_fps)
+                fps = curr_fps
                 curr_fps = 0
-            cv2.putText(result, fps, (20, 30), cv2.FONT_HERSHEY_SIMPLEX,
-                        0.6, (0, 255, 0), 2)
+
+            # Initialize the set of information we'll displaying on the frame
+            info = [
+                ('FPS', '{}'.format(fps)),
+                ('Faces detected', '{}'.format(len(faces)))
+            ]
+
+            cv2.rectangle(result, (5, 5), (120, 50), (0, 0, 0), cv2.FILLED)
+
+            for (i, (txt, val)) in enumerate(info):
+                text = '{}: {}'.format(txt, val)
+                cv2.putText(result, text, (10, (i * 20) + 20),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.3, (10, 175, 0), 1)
+
             cv2.namedWindow("face", cv2.WINDOW_NORMAL)
             cv2.imshow("face", result)
             if isOutput:
