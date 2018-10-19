@@ -1,7 +1,7 @@
 import argparse
 
 from PIL import Image
-from YOLO import YOLO, detect_video
+from YOLO import YOLO, detect_video, detect_img
 
 
 #####################################################################
@@ -23,25 +23,10 @@ def get_args():
                         help='image detection mode')
     parser.add_argument('--video', type=str, default='samples/subway.mp4',
                         help='path to the video')
-    parser.add_argument('--output', type=str,
-                        default='', help='image/video output path')
+    parser.add_argument('--output', type=str, default='outputs/',
+                        help='image/video output path')
     args = parser.parse_args()
     return args
-
-
-def detect_img(yolo):
-    while True:
-        img = input('[i] ==> Input image filename: ')
-        try:
-            image = Image.open(img)
-        except:
-            print('[!] ==> Open Error! Try again!')
-            continue
-        else:
-            res_image = yolo.detect_image(image)
-            res_image.show()
-
-    yolo.close_session()
 
 
 def _main():
@@ -55,7 +40,7 @@ def _main():
     else:
         print('[i] ==> Video detection mode\n')
         # Call the detect_video method here
-        detect_video(YOLO(args), args.video)
+        detect_video(YOLO(args), args.video, args.output)
 
     print('Well done!!!')
 
