@@ -45,7 +45,7 @@ $ git clone https://github.com/sthanhng/yoloface
 
 >**image input**
 ```bash
-$ python yoloface.py --images samples/outside_000001.jpg --output-dir outputs/
+$ python yoloface.py --image samples/outside_000001.jpg --output-dir outputs/
 ```
 
 >**video input**
