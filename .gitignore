@@ -26,7 +26,7 @@ Network Trash Folder
 Temporary Items
 .apdisk
 
-### Project ###
+### YOLO Face ###
 .idea/
 __pycache__/
 
@@ -36,12 +36,11 @@ venv/
 # Temp files
 temp/
 samples/*.mp4
+samples/
 
 # The weights of the trained models
-model-weights/*.weights
+*.weights
+*.h5
 
 # Output files
-outputs/*.mp4
-outputs/*.avi
-
-
+outputs/
