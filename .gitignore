@@ -39,6 +39,7 @@ samples/*.mp4
 samples/
 
 # The weights of the trained models
+model-weights/
 *.weights
 *.h5
 
