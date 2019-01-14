@@ -172,12 +172,14 @@ def detect_img(yolo):
         try:
             image = Image.open(img)
         except:
-            print('*** Open Error! Try again!')
-            continue
+            if img == 'q' or img == 'Q':
+                break
+            else:
+                print('*** Open Error! Try again!')
+                continue
         else:
             res_image, _ = yolo.detect_image(image)
             res_image.show()
-
     yolo.close_session()
 
 
@@ -247,6 +249,5 @@ def detect_video(model, video_path=None, output=None):
     vid.release()
     out.release()
     cv2.destroyAllWindows()
-
     # close the session
     model.close_session()
