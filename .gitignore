@@ -29,6 +29,7 @@ Temporary Items
 ### YOLO Face ###
 .idea/
 __pycache__/
+.vscode/
 
 # Virtualenv
 venv/
@@ -37,6 +38,7 @@ venv/
 temp/
 samples/*.mp4
 samples/
+*_kmeans.py
 
 # The weights of the trained models
 model-weights/
@@ -45,3 +47,6 @@ model-weights/
 
 # Output files
 outputs/
+
+# Datasets
+data/
