@@ -1,7 +1,6 @@
 import argparse
 
-from PIL import Image
-from YOLO import YOLO, detect_video, detect_img
+from yolo.yolo import YOLO, detect_video, detect_img
 
 
 #####################################################################
