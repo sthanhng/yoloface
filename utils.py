@@ -101,8 +101,10 @@ def post_process(frame, outs, conf_threshold, nms_threshold):
         width = box[2]
         height = box[3]
         final_boxes.append(box)
-        draw_predict(frame, confidences[i], left, top, left + width,
-                     top + height)
+        left, top, right, bottom = refined_box(left, top, width, height)
+        # draw_predict(frame, confidences[i], left, top, left + width,
+        #              top + height)
+        draw_predict(frame, confidences[i], left, top, right, bottom)
     return final_boxes
 
 
@@ -134,3 +136,18 @@ class FPS:
     def fps(self):
         # compute the (approximate) frames per second
         return self._num_frames / self.elapsed()
+
+def refined_box(left, top, width, height):
+    right = left + width
+    bottom = top + height
+
+    original_vert_height = bottom - top
+    top = int(top + original_vert_height * 0.15)
+    bottom = int(bottom - original_vert_height * 0.05)
+
+    margin = ((bottom - top) - (right - left)) // 2
+    left = left - margin if (bottom - top - right + left) % 2 == 0 else left - margin - 1
+
+    right = right + margin
+
+    return left, top, right, bottom
