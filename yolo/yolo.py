@@ -17,7 +17,7 @@ import numpy as np
 import cv2
 
 from yolo.model import eval
-
+import tensorflow.compat.v1 as tf
 from keras import backend as K
 from keras.models import load_model
 from timeit import default_timer as timer
@@ -32,7 +32,7 @@ class YOLO(object):
         self.anchors_path = args.anchors
         self.class_names = self._get_class()
         self.anchors = self._get_anchors()
-        self.sess = K.get_session()
+        self.sess = tf.keras.backend.get_session()
         self.boxes, self.scores, self.classes = self._generate()
         self.model_image_size = args.img_size
 
