@@ -51,7 +51,8 @@ def get_outputs_names(net):
 # Draw the predicted bounding box
 def draw_predict(frame, conf, left, top, right, bottom):
     # Draw a bounding box.
-    cv2.rectangle(frame, (left, top), (right, bottom), COLOR_YELLOW, 2)
+    colors = tuple(np.random.randint(1, 255, 3).tolist())
+    cv2.rectangle(frame, (left, top), (right, bottom), colors, 2)
 
     text = '{:.2f}'.format(conf)
 
