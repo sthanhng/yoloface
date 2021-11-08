@@ -83,8 +83,10 @@ def post_process(frame, outs, conf_threshold, nms_threshold):
                 center_y = int(detection[1] * frame_height)
                 width = int(detection[2] * frame_width)
                 height = int(detection[3] * frame_height)
-                left = int(center_x - width / 2)
-                top = int(center_y - height / 2)
+                left = max(int(center_x - width / 2), 0)
+                top = max(int(center_y - height / 2), 0)
+                width = min(width, frame_width - left)
+                height = min(height, frame_height - top)
                 confidences.append(float(confidence))
                 boxes.append([left, top, width, height])
 
