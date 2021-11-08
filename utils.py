@@ -45,13 +45,14 @@ def get_outputs_names(net):
 
     # Get the names of the output layers, i.e. the layers with unconnected
     # outputs
-    return [layers_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    return [layers_names[i - 1] for i in net.getUnconnectedOutLayers()]
 
 
 # Draw the predicted bounding box
 def draw_predict(frame, conf, left, top, right, bottom):
     # Draw a bounding box.
-    cv2.rectangle(frame, (left, top), (right, bottom), COLOR_YELLOW, 2)
+    colors = tuple(np.random.randint(1, 255, 3).tolist())
+    cv2.rectangle(frame, (left, top), (right, bottom), colors, 2)
 
     text = '{:.2f}'.format(conf)
 
@@ -83,8 +84,10 @@ def post_process(frame, outs, conf_threshold, nms_threshold):
                 center_y = int(detection[1] * frame_height)
                 width = int(detection[2] * frame_width)
                 height = int(detection[3] * frame_height)
-                left = int(center_x - width / 2)
-                top = int(center_y - height / 2)
+                left = max(int(center_x - width / 2), 0)
+                top = max(int(center_y - height / 2), 0)
+                width = min(width, frame_width - left)
+                height = min(height, frame_height - top)
                 confidences.append(float(confidence))
                 boxes.append([left, top, width, height])
 
@@ -94,7 +97,6 @@ def post_process(frame, outs, conf_threshold, nms_threshold):
                                nms_threshold)
 
     for i in indices:
-        i = i[0]
         box = boxes[i]
         left = box[0]
         top = box[1]
